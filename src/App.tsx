@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Container from './components/layout/Container';
 import Footer from './components/layout/Footer';
 import HashtagList from './components/hashtag/HashtagList';
@@ -11,18 +11,26 @@ function App() {
   const [errorMessage, setErrorMessage] = useState('');
   const [selectedComapny, setSelectedComapny] = useState('');
 
-  const filteredFeedbackItems = selectedComapny
-    ? feedbackItems.filter(
-        (feedbackItem) => feedbackItem.company === selectedComapny
-      )
-    : feedbackItems;
+  const filteredFeedbackItems = useMemo(
+    () =>
+      selectedComapny
+        ? feedbackItems.filter(
+            (feedbackItem) => feedbackItem.company === selectedComapny
+          )
+        : feedbackItems,
+    [feedbackItems, selectedComapny]
+  );
 
-  const companyList = feedbackItems
-    .map((item) => item.company)
-    // remove duplicates
-    .filter((company, index, array) => {
-      return array.indexOf(company) === index;
-    });
+  const companyList = useMemo(
+    () =>
+      feedbackItems
+        .map((item) => item.company)
+        // remove duplicates
+        .filter((company, index, array) => {
+          return array.indexOf(company) === index;
+        }),
+    [feedbackItems]
+  );
 
   const handleSelectCompany = (company: string) => {
     setSelectedComapny((prev) => {
