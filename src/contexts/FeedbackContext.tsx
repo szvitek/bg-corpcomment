@@ -1,6 +1,6 @@
-import { ReactNode, createContext, useEffect, useMemo, useState } from 'react';
+import { ReactNode, createContext, useMemo, useState } from 'react';
 import { TFeedbackItem } from '../lib/types';
-import API from '../lib/api';
+import { useFeedbackItems } from '../lib/hooks';
 
 type FeedbackProviderProps = {
   children: ReactNode;
@@ -18,9 +18,8 @@ type TFeedbackContext = {
 export const FeedbackContext = createContext<TFeedbackContext | null>(null);
 
 export default function FeedbackProvider({ children }: FeedbackProviderProps) {
-  const [feedbackItems, setFeedbackItems] = useState<TFeedbackItem[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const { feedbackItems, isLoading, errorMessage, setFeedbackItems } =
+    useFeedbackItems();
   const [selectedComapny, setSelectedComapny] = useState('');
 
   const companyList = useMemo(
@@ -74,29 +73,6 @@ export default function FeedbackProvider({ children }: FeedbackProviderProps) {
       return prev === company ? '' : company;
     });
   };
-
-  useEffect(() => {
-    const fetchFeedbackItems = async () => {
-      setIsLoading(true);
-
-      try {
-        const response = await API.get('/api/feedbacks');
-
-        if (!response.ok) {
-          throw new Error();
-        }
-
-        const data = await response.json();
-        setFeedbackItems(data);
-      } catch (error) {
-        setErrorMessage('Something went wrong. Please try again later.');
-      }
-
-      setIsLoading(false);
-    };
-
-    fetchFeedbackItems();
-  }, []);
 
   return (
     <FeedbackContext.Provider
