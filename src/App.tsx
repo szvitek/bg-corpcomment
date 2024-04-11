@@ -20,7 +20,6 @@ function App() {
         : feedbackItems,
     [feedbackItems, selectedComapny]
   );
-
   const companyList = useMemo(
     () =>
       feedbackItems
@@ -37,7 +36,6 @@ function App() {
       return prev === company ? '' : company;
     });
   };
-
   const handleAddToList = async (text: string) => {
     const company = text
       .split(' ')

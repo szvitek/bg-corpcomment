@@ -1,4 +1,4 @@
-const BASE_URL = import.meta.env.VITE_BASE_API || 'http://localhost/3000';
+const BASE_URL = import.meta.env.VITE_BASE_API || 'http://localhost:3000';
 
 const API = {
   get: (url: string) => {
