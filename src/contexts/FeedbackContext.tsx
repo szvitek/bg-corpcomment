@@ -1,6 +1,7 @@
 import { ReactNode, createContext, useMemo, useState } from 'react';
 import { TFeedbackItem } from '../lib/types';
 import { useFeedbackItems } from '../lib/hooks';
+import API from '../lib/api';
 
 type FeedbackProviderProps = {
   children: ReactNode;
@@ -59,14 +60,7 @@ export default function FeedbackProvider({ children }: FeedbackProviderProps) {
 
     setFeedbackItems([...feedbackItems, newItem]);
 
-    await fetch('http://localhost:3000/api/feedbacks', {
-      method: 'POST',
-      body: JSON.stringify(newItem),
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-    });
+    await API.post('/api/feedbacks', newItem);
   };
   const handleSelectCompany = (company: string) => {
     setSelectedComapny((prev) => {
